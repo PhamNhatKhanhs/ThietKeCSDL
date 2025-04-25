@@ -1,7 +1,6 @@
 # app/services/phong_service.py
 from app.utils.db import get_cursor
-from flask import current_app # Import current_app nếu cần truy cập config
-
+from flask import current_app 
 def kiem_tra_phong_trong(maPhong):
     """
     Kiểm tra xem phòng còn chỗ trống không và trả về sức chứa.

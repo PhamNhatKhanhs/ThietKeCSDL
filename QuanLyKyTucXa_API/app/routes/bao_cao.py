@@ -15,21 +15,28 @@ def report_chi_phi_sinh_vien():
     if not thangXem:
         return jsonify({"error": "Thiếu tham số 'thang' (YYYY-MM)"}), 400
 
+    # Cố gắng chuẩn hóa định dạng tháng thành YYYY-MM
     try:
+        if len(thangXem.split('-')[1]) == 1: # Nếu tháng chỉ có 1 chữ số (ví dụ 2025-4)
+            thangXem = thangXem.split('-')[0] + '-0' + thangXem.split('-')[1] # Chuyển thành 2025-04
         # Xác định ngày đầu và cuối tháng
         namXem = int(thangXem.split('-')[0])
         thangXem_INT = int(thangXem.split('-')[1])
+        if not (1 <= thangXem_INT <= 12): raise ValueError("Tháng không hợp lệ")
         ngayDauThang = date(namXem, thangXem_INT, 1)
-        # Ngày cuối tháng phức tạp hơn một chút để xử lý tháng 2 và các tháng khác nhau
         if thangXem_INT == 12:
              ngayCuoiThang = date(namXem, thangXem_INT, 31)
         else:
              ngayCuoiThang = date(namXem, thangXem_INT + 1, 1) - timedelta(days=1)
+        # Tính ngày đầu tháng sau cho truy vấn dịch vụ
+        if thangXem_INT == 12:
+            ngayDauThangSau = date(namXem + 1, 1, 1)
+        else:
+            ngayDauThangSau = date(namXem, thangXem_INT + 1, 1)
 
-    except ValueError:
-         return jsonify({"error": "Định dạng tháng không hợp lệ (YYYY-MM)"}), 400
+    except (ValueError, IndexError):
+         return jsonify({"error": "Định dạng tháng không hợp lệ (cần YYYY-MM, ví dụ 2025-04)"}), 400
 
-    # Cache key có thể bao gồm cả tháng và mã SV nếu lọc
     cache_key = f"report:chiphi:{thangXem}"
     if maSV_filter:
         cache_key += f":{maSV_filter}"
@@ -42,70 +49,66 @@ def report_chi_phi_sinh_vien():
         cursor = get_cursor(dictionary=True)
         if not cursor: return jsonify({"error": "Lỗi kết nối CSDL"}), 500
 
-        # Tái sử dụng hoặc điều chỉnh Query 1 từ script SQL bạn đã có
-        # Query này khá phức tạp, cần đảm bảo nó hoạt động đúng
         sql = """
             SELECT
                 sv.maSV,
                 sv.hoTen,
                 %s AS ThangNam,
-                -- Tiền phòng
-                IFNULL(tp.donGiaThang, 0) AS TienPhong,
-                -- Tiền dịch vụ
+                IFNULL(tp.GiaThang, 0) AS TienPhong, -- Đổi tên alias cho rõ
                 IFNULL(tdv.TongTienDV, 0) AS TienDichVu,
-                -- Tiền gửi xe tháng
                 IFNULL(tgx_thang.TongPhiThang, 0) AS TienGuiXe_PhiThang,
-                 -- Tiền phạt gửi xe
                 IFNULL(tgx_phat.TongPhiPhat, 0) AS TienGuiXe_Phat,
-                -- Tổng cộng
-                (IFNULL(tp.donGiaThang, 0) +
+                (IFNULL(tp.GiaThang, 0) +
                  IFNULL(tdv.TongTienDV, 0) +
                  IFNULL(tgx_thang.TongPhiThang, 0) +
                  IFNULL(tgx_phat.TongPhiPhat, 0)
                 ) AS TongCongThang
             FROM
                 tblSinhVien sv
-            -- Lấy tiền phòng (chỉ lấy 1 phòng nếu SV đang thuê)
             LEFT JOIN (
-                SELECT hd.maSV, lp.donGiaThang
+                -- SỬA Ở ĐÂY: Dùng MAX() hoặc MIN() cho donGiaThang
+                SELECT hd.maSV, MAX(lp.donGiaThang) AS GiaThang
                 FROM tblHopDongThuePhong hd
                 JOIN tblPhong p ON hd.maPhong = p.maPhong
                 JOIN tblLoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
                 WHERE hd.trangThai = 'Đang thuê'
-                  AND hd.ngayBatDau <= %s -- LAST_DAY
-                  AND (hd.ngayKetThuc IS NULL OR hd.ngayKetThuc >= %s) -- First Day
-                GROUP BY hd.maSV -- Đảm bảo chỉ lấy 1 giá phòng/SV
+                  AND hd.ngayBatDau <= %s -- ngayCuoiThang
+                  AND (hd.ngayKetThuc IS NULL OR hd.ngayKetThuc >= %s) -- ngayDauThang
+                GROUP BY hd.maSV -- Chỉ cần group by maSV là đủ khi đã dùng MAX()
             ) tp ON sv.maSV = tp.maSV
-            -- Lấy tổng tiền dịch vụ
             LEFT JOIN (
                 SELECT maSV, SUM(thanhTien) AS TongTienDV
                 FROM tblSuDungDichVu
-                WHERE thoiGianSuDung >= %s AND thoiGianSuDung < DATE_ADD(%s, INTERVAL 1 MONTH)
+                WHERE thoiGianSuDung >= %s AND thoiGianSuDung < %s -- Dùng ngayDauThangSau
                 GROUP BY maSV
             ) tdv ON sv.maSV = tdv.maSV
-            -- Lấy tổng phí gửi xe tháng
             LEFT JOIN (
                 SELECT maSV, SUM(donGiaThang) AS TongPhiThang
                 FROM tblDangKyGuiXeThang
-                WHERE ngayDangKy <= %s
-                  AND (ngayHetHan IS NULL OR ngayHetHan >= %s)
+                WHERE ngayDangKy <= %s -- ngayCuoiThang
+                  AND (ngayHetHan IS NULL OR ngayHetHan >= %s) -- ngayDauThang
                 GROUP BY maSV
             ) tgx_thang ON sv.maSV = tgx_thang.maSV
-            -- Lấy tổng phí phạt gửi xe
             LEFT JOIN (
                  SELECT dgx.maSV, SUM(lgx.phiPhatSinh) AS TongPhiPhat
                  FROM tblLuotGuiLayXe lgx
                  JOIN tblDangKyGuiXeThang dgx ON lgx.maDangKy = dgx.maDangKy
-                 WHERE lgx.ngay >= %s AND lgx.ngay <= %s
+                 WHERE lgx.ngay >= %s AND lgx.ngay <= %s -- ngayDauThang, ngayCuoiThang
                  GROUP BY dgx.maSV
             ) tgx_phat ON sv.maSV = tgx_phat.maSV
             WHERE 1=1
         """
+        # Sửa lại thứ tự và giá trị params cho đúng với query mới
         params = [
-            thangXem, ngayCuoiThang, ngayDauThang, # Cho tiền phòng
-            ngayDauThang, ngayDauThang, # Cho tiền dịch vụ
-            ngayCuoiThang, ngayDauThang, # Cho phí xe tháng
-            ngayDauThang, ngayCuoiThang # Cho phí phạt
+            thangXem,              # Cho %s AS ThangNam
+            ngayCuoiThang,         # Cho tiền phòng (ngayBatDau <=)
+            ngayDauThang,          # Cho tiền phòng (ngayKetThuc >=)
+            ngayDauThang,         # Cho tiền dịch vụ (thoiGianSuDung >=)
+            ngayDauThangSau,       # Cho tiền dịch vụ (thoiGianSuDung <) -> Sửa lại param này
+            ngayCuoiThang,         # Cho phí xe tháng (ngayDangKy <=)
+            ngayDauThang,          # Cho phí xe tháng (ngayHetHan >=)
+            ngayDauThang,         # Cho phí phạt (lgx.ngay >=)
+            ngayCuoiThang         # Cho phí phạt (lgx.ngay <=)
         ]
 
         if maSV_filter:
@@ -114,7 +117,7 @@ def report_chi_phi_sinh_vien():
 
         sql += " ORDER BY sv.maSV"
 
-        cursor.execute(sql, tuple(params))
+        cursor.execute(sql, tuple(params)) # Đảm bảo params là tuple
         result = cursor.fetchall()
 
         set_cache(cache_key, result)
@@ -122,12 +125,13 @@ def report_chi_phi_sinh_vien():
 
     except Exception as e:
         print(f"Lỗi báo cáo chi phí sinh viên tháng {thangXem}: {e}")
-        # In cả câu query và params để debug nếu cần
+        # In query và params nếu cần debug
         # print("SQL:", sql)
-        # print("Params:", params)
+        # print("Params:", tuple(params))
         return jsonify({"error": "Lỗi máy chủ khi tạo báo cáo"}), 500
     finally:
         if cursor: cursor.close()
+
 
 
 # --- API Báo cáo 2: Dịch vụ sinh viên sử dụng ---

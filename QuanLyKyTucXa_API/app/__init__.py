@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from .config import Config
 from .utils import db as db_utils
-# Không cần import cache_utils ở đây vì nó dùng 'g'
+
 
 def create_app():
     """Factory function để tạo và cấu hình Flask app."""
