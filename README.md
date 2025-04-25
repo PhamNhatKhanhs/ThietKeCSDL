@@ -1,4 +1,4 @@
-# 🏢 Dormitory Management System API
+# 🏢 Hệ Thống Quản Lý Ký Túc Xá API
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-2.0%2B-green)](https://flask.palletsprojects.com/en/2.0.x/)
@@ -6,57 +6,57 @@
 [![Redis](https://img.shields.io/badge/Redis-latest-red)](https://redis.io/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A comprehensive RESTful API backend system for managing student dormitory operations, including student information, room management, contracts, services, vehicle parking, visitor tracking, and billing.
+Hệ thống backend API RESTful toàn diện để quản lý hoạt động ký túc xá sinh viên, bao gồm thông tin sinh viên, quản lý phòng, hợp đồng, dịch vụ, gửi xe, theo dõi khách thăm và hóa đơn thanh toán.
 
-## 📋 Table of Contents
+## 📋 Mục Lục
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Database Design](#database-design)
-- [API Endpoints](#api-endpoints)
-- [Installation Guide](#installation-guide)
-  - [Prerequisites](#prerequisites)
-  - [Setup Steps](#setup-steps)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [Testing](#testing)
-- [Project Requirements](#project-requirements)
+- [Tổng quan](#tổng-quan)
+- [Tính năng chính](#tính-năng-chính)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Thiết kế cơ sở dữ liệu](#thiết-kế-cơ-sở-dữ-liệu)
+- [Các Endpoint API](#các-endpoint-api)
+- [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
+  - [Yêu cầu hệ thống](#yêu-cầu-hệ-thống)
+  - [Các bước cài đặt](#các-bước-cài-đặt)
+- [Cấu hình](#cấu-hình)
+- [Chạy ứng dụng](#chạy-ứng-dụng)
+- [Kiểm thử](#kiểm-thử)
+- [Yêu cầu dự án](#yêu-cầu-dự-án)
 
-## 📝 Overview
+## 📝 Tổng quan
 
-This application provides RESTful API endpoints to perform CRUD operations on key data entities while implementing complex business logic related to dormitory management. The system integrates Redis for caching frequently accessed data, significantly improving read performance. Business rule validations (such as room occupancy limits and student vehicle registration constraints) are implemented at the service layer of the application.
+Ứng dụng này cung cấp các endpoint API RESTful để thực hiện các thao tác CRUD trên các thực thể dữ liệu chính đồng thời triển khai logic nghiệp vụ phức tạp liên quan đến quản lý ký túc xá. Hệ thống tích hợp Redis để lưu đệm dữ liệu được truy cập thường xuyên, cải thiện đáng kể hiệu suất đọc. Các xác thực quy tắc nghiệp vụ (như giới hạn sức chứa phòng và giới hạn đăng ký xe của sinh viên) được triển khai ở tầng dịch vụ của ứng dụng.
 
-## ✨ Key Features
+## ✨ Tính năng chính
 
-- **Student Management**: Complete CRUD operations for student records
-- **Room Types & Rooms Management**: Configurable room types with pricing and capacity constraints
-- **Rental Contract Management**: Contract creation with room availability validation
-- **Service Management**: Configurable service types and service usage tracking
-- **Vehicle Registration System**: Monthly parking registration with usage monitoring
-- **Vehicle Entry/Exit Tracking**: Automated fee calculation based on usage policy
-- **Visitor Management**: Visitor registration and tracking
-- **Billing System**: Automated monthly invoice generation and payment tracking
-- **Advanced Reporting**: Complex query APIs for business intelligence
-- **Performance Optimization**: Redis caching for GET operations
+- **Quản lý sinh viên**: Các thao tác CRUD đầy đủ cho hồ sơ sinh viên
+- **Quản lý loại phòng & phòng**: Cấu hình loại phòng với giá và giới hạn sức chứa
+- **Quản lý hợp đồng thuê**: Tạo hợp đồng với xác thực tình trạng phòng
+- **Quản lý dịch vụ**: Cấu hình loại dịch vụ và theo dõi sử dụng dịch vụ
+- **Hệ thống đăng ký xe**: Đăng ký gửi xe theo tháng với giám sát sử dụng
+- **Theo dõi ra/vào của xe**: Tính phí tự động dựa trên chính sách sử dụng
+- **Quản lý khách thăm**: Đăng ký và theo dõi khách thăm
+- **Hệ thống hóa đơn**: Tự động tạo hóa đơn hàng tháng và theo dõi thanh toán
+- **Báo cáo nâng cao**: API truy vấn phức tạp cho thông tin kinh doanh
+- **Tối ưu hiệu suất**: Lưu đệm Redis cho các thao tác GET
 
-## 🛠️ Technology Stack
+## 🛠️ Công nghệ sử dụng
 
-- **Backend**: Python 3.8+ with Flask framework
-- **Database**: MySQL 8.0+
-- **Caching**: Redis
-- **Key Dependencies**:
-  - `Flask`: Web framework
-  - `mysql-connector-python`: MySQL database connector
-  - `redis`: Redis client for caching
-  - `python-dotenv`: Environment variable management
-  - `flask-cors`: Cross-Origin Resource Sharing support
-  - `marshmallow`: Object serialization/deserialization
-  - `gunicorn`: WSGI HTTP Server (for production)
+- **Backend**: Python 3.8+ với framework Flask
+- **Cơ sở dữ liệu**: MySQL 8.0+
+- **Bộ nhớ đệm**: Redis
+- **Các thư viện chính**:
+  - `Flask`: Framework web
+  - `mysql-connector-python`: Kết nối cơ sở dữ liệu MySQL
+  - `redis`: Client Redis cho bộ nhớ đệm
+  - `python-dotenv`: Quản lý biến môi trường
+  - `flask-cors`: Hỗ trợ chia sẻ tài nguyên giữa các nguồn gốc khác nhau (CORS)
+  - `marshmallow`: Tuần tự hóa/giải tuần tự hóa đối tượng
+  - `gunicorn`: Máy chủ HTTP WSGI (cho môi trường sản xuất)
 
-## 🗄️ Database Design
+## 🗄️ Thiết kế cơ sở dữ liệu
 
-The system uses a relational database with the following entity structure:
+Hệ thống sử dụng cơ sở dữ liệu quan hệ với cấu trúc thực thể sau:
 
 ```mermaid
 erDiagram
@@ -177,259 +177,242 @@ erDiagram
     tblSinhVien ||--o{ tblHoaDonThanhToan : "thanh toán"
 ```
 
-### Database Setup Script
+### Tập lệnh thiết lập cơ sở dữ liệu
 
-The file `QuanLyKyTucXa_Setup.sql` in this repository contains all the necessary SQL commands to:
+File `QuanLyKyTucXa_Setup.sql` trong kho lưu trữ này chứa tất cả các lệnh SQL cần thiết để:
 
-- Create the `QuanLyKyTucXa` database
-- Create all tables with primary keys, foreign keys, and constraint definitions
-- Insert sample data for testing purposes
-- Include complex SQL queries for reporting requirements (with clear comments)
+- Tạo cơ sở dữ liệu `QuanLyKyTucXa`
+- Tạo tất cả các bảng với khóa chính, khóa ngoại và định nghĩa ràng buộc
+- Chèn dữ liệu mẫu cho mục đích kiểm thử
+- Bao gồm các truy vấn SQL phức tạp cho yêu cầu báo cáo (với các chú thích rõ ràng)
 
-## 🔌 API Endpoints
+## 🔌 Các Endpoint API
 
-The application exposes the following RESTful API endpoints with the prefix `/api`:
+Ứng dụng cung cấp các endpoint API RESTful sau với tiền tố `/api`:
 
-### Student Management
-- `GET /api/sinhvien`: Get all students
-- `GET /api/sinhvien/{maSV}`: Get student by ID
-- `POST /api/sinhvien`: Create new student
-- `PUT /api/sinhvien/{maSV}`: Update student
-- `DELETE /api/sinhvien/{maSV}`: Delete student
+### Quản lý sinh viên
+- `GET /api/sinhvien`: Lấy tất cả sinh viên
+- `GET /api/sinhvien/{maSV}`: Lấy sinh viên theo ID
+- `POST /api/sinhvien`: Tạo sinh viên mới
+- `PUT /api/sinhvien/{maSV}`: Cập nhật sinh viên
+- `DELETE /api/sinhvien/{maSV}`: Xóa sinh viên
 
-### Room Type Management
-- `GET /api/loaiphong`: Get all room types
-- `GET /api/loaiphong/{maLoaiPhong}`: Get room type by ID
-- `POST /api/loaiphong`: Create new room type
-- `PUT /api/loaiphong/{maLoaiPhong}`: Update room type
-- `DELETE /api/loaiphong/{maLoaiPhong}`: Delete room type
+### Quản lý loại phòng
+- `GET /api/loaiphong`: Lấy tất cả loại phòng
+- `GET /api/loaiphong/{maLoaiPhong}`: Lấy loại phòng theo ID
+- `POST /api/loaiphong`: Tạo loại phòng mới
+- `PUT /api/loaiphong/{maLoaiPhong}`: Cập nhật loại phòng
+- `DELETE /api/loaiphong/{maLoaiPhong}`: Xóa loại phòng
 
-### Room Management
-- `GET /api/phong`: Get all rooms
-- `GET /api/phong/{maPhong}`: Get room by ID
-- `POST /api/phong`: Create new room
-- `PUT /api/phong/{maPhong}`: Update room
-- `DELETE /api/phong/{maPhong}`: Delete room
+### Quản lý phòng
+- `GET /api/phong`: Lấy tất cả phòng
+- `GET /api/phong/{maPhong}`: Lấy phòng theo ID
+- `POST /api/phong`: Tạo phòng mới
+- `PUT /api/phong/{maPhong}`: Cập nhật phòng
+- `DELETE /api/phong/{maPhong}`: Xóa phòng
 
-### Contract Management
-- `GET /api/hopdong`: Get all contracts
-- `GET /api/hopdong/sinhvien/{maSV}`: Get contracts by student ID
-- `POST /api/hopdong`: Create new contract
-- `PUT /api/hopdong/{maHopDong}`: Update contract status
+### Quản lý hợp đồng
+- `GET /api/hopdong`: Lấy tất cả hợp đồng
+- `GET /api/hopdong/sinhvien/{maSV}`: Lấy hợp đồng theo ID sinh viên
+- `POST /api/hopdong`: Tạo hợp đồng mới
+- `PUT /api/hopdong/{maHopDong}`: Cập nhật trạng thái hợp đồng
 
-### Service Type Management
-- `GET /api/dichvu/loai`: Get all service types
-- `GET /api/dichvu/loai/{maLoaiDV}`: Get service type by ID
-- `POST /api/dichvu/loai`: Create new service type
-- `PUT /api/dichvu/loai/{maLoaiDV}`: Update service type
-- `DELETE /api/dichvu/loai/{maLoaiDV}`: Delete service type
+### Quản lý loại dịch vụ
+- `GET /api/dichvu/loai`: Lấy tất cả loại dịch vụ
+- `GET /api/dichvu/loai/{maLoaiDV}`: Lấy loại dịch vụ theo ID
+- `POST /api/dichvu/loai`: Tạo loại dịch vụ mới
+- `PUT /api/dichvu/loai/{maLoaiDV}`: Cập nhật loại dịch vụ
+- `DELETE /api/dichvu/loai/{maLoaiDV}`: Xóa loại dịch vụ
 
-### Service Management
-- `GET /api/dichvu`: Get all services
-- `GET /api/dichvu/{maDV}`: Get service by ID
-- `POST /api/dichvu`: Create new service
-- `PUT /api/dichvu/{maDV}`: Update service
-- `DELETE /api/dichvu/{maDV}`: Delete service
+### Quản lý dịch vụ
+- `GET /api/dichvu`: Lấy tất cả dịch vụ
+- `GET /api/dichvu/{maDV}`: Lấy dịch vụ theo ID
+- `POST /api/dichvu`: Tạo dịch vụ mới
+- `PUT /api/dichvu/{maDV}`: Cập nhật dịch vụ
+- `DELETE /api/dichvu/{maDV}`: Xóa dịch vụ
 
-### Service Usage Management
-- `GET /api/dichvu/sudung/sinhvien/{maSV}`: Get service usage history by student
-- `POST /api/dichvu/sudung`: Record service usage
+### Quản lý sử dụng dịch vụ
+- `GET /api/dichvu/sudung/sinhvien/{maSV}`: Lấy lịch sử sử dụng dịch vụ theo sinh viên
+- `POST /api/dichvu/sudung`: Ghi nhận sử dụng dịch vụ
 
-### Vehicle Management
-- `GET /api/guixe/xe`: Get all vehicles
-- `GET /api/guixe/xe/sinhvien/{maSV}`: Get vehicles by student ID
-- `POST /api/guixe/xe`: Register new vehicle
-- `PUT /api/guixe/xe/{bienSoXe}`: Update vehicle information
-- `DELETE /api/guixe/xe/{bienSoXe}`: Delete vehicle
+### Quản lý xe
+- `GET /api/guixe/xe`: Lấy tất cả xe
+- `GET /api/guixe/xe/sinhvien/{maSV}`: Lấy xe theo ID sinh viên
+- `POST /api/guixe/xe`: Đăng ký xe mới
+- `PUT /api/guixe/xe/{bienSoXe}`: Cập nhật thông tin xe
+- `DELETE /api/guixe/xe/{bienSoXe}`: Xóa xe
 
-### Monthly Vehicle Registration
-- `GET /api/guixe/dangky`: Get all monthly registrations
-- `GET /api/guixe/dangky/sinhvien/{maSV}`: Get registrations by student ID
-- `POST /api/guixe/dangky`: Create new monthly registration
-- `PUT /api/guixe/dangky/{maDangKy}`: Update registration
-- `DELETE /api/guixe/dangky/{maDangKy}`: Cancel registration
+### Đăng ký gửi xe tháng
+- `GET /api/guixe/dangky`: Lấy tất cả đăng ký tháng
+- `GET /api/guixe/dangky/sinhvien/{maSV}`: Lấy đăng ký theo ID sinh viên
+- `POST /api/guixe/dangky`: Tạo đăng ký tháng mới
+- `PUT /api/guixe/dangky/{maDangKy}`: Cập nhật đăng ký
+- `DELETE /api/guixe/dangky/{maDangKy}`: Hủy đăng ký
 
-### Vehicle Entry/Exit Management
-- `GET /api/guixe/luot/dangky/{maDangKy}`: Get entry/exit logs by registration ID
-- `POST /api/guixe/luot`: Record vehicle entry/exit
+### Quản lý ra/vào xe
+- `GET /api/guixe/luot/dangky/{maDangKy}`: Lấy lịch sử ra/vào theo ID đăng ký
+- `POST /api/guixe/luot`: Ghi nhận xe ra/vào
 
-### Visitor Management
-- `GET /api/khach`: Get all visitors
-- `GET /api/khach/{maKhach}`: Get visitor by ID
-- `GET /api/khach/cmt/{soCMT}`: Find visitor by ID card number
-- `POST /api/khach`: Register new visitor
-- `PUT /api/khach/{maKhach}`: Update visitor information
+### Quản lý khách
+- `GET /api/khach`: Lấy tất cả khách
+- `GET /api/khach/{maKhach}`: Lấy khách theo ID
+- `GET /api/khach/cmt/{soCMT}`: Tìm khách theo số CMT/CCCD
+- `POST /api/khach`: Đăng ký khách mới
+- `PUT /api/khach/{maKhach}`: Cập nhật thông tin khách
 
-### Visitor Tracking
-- `GET /api/khach/tham/sinhvien/{maSV}`: Get visitor logs by student ID
-- `POST /api/khach/tham`: Record visitor entry
-- `PUT /api/khach/tham/{maTham}`: Record visitor exit
+### Theo dõi khách thăm
+- `GET /api/khach/tham/sinhvien/{maSV}`: Lấy lịch sử khách thăm theo ID sinh viên
+- `POST /api/khach/tham`: Ghi nhận khách vào
+- `PUT /api/khach/tham/{maTham}`: Ghi nhận khách ra
 
-### Billing Management
-- `GET /api/hoadon`: Get all invoices
-- `GET /api/hoadon/{maHoaDon}`: Get invoice details
-- `GET /api/hoadon/sinhvien/{maSV}`: Get invoices by student ID
-- `POST /api/hoadon/generate`: Trigger monthly invoice generation
-- `PUT /api/hoadon/{maHoaDon}/pay`: Mark invoice as paid
+### Quản lý hóa đơn
+- `GET /api/hoadon`: Lấy tất cả hóa đơn
+- `GET /api/hoadon/{maHoaDon}`: Lấy chi tiết hóa đơn
+- `GET /api/hoadon/sinhvien/{maSV}`: Lấy hóa đơn theo ID sinh viên
+- `POST /api/hoadon/generate`: Kích hoạt tạo hóa đơn hàng tháng
+- `PUT /api/hoadon/{maHoaDon}/pay`: Đánh dấu hóa đơn đã thanh toán
 
-### Reporting APIs
-- `GET /api/bao-cao/chiphi-sinhvien`: Student expenses report
-- `GET /api/bao-cao/sudung-dichvu`: Service usage report
-- `GET /api/bao-cao/khach-tham`: Visitor statistics report
-- `GET /api/bao-cao/doanhthu-dichvu`: Service revenue report
+### API Báo cáo
+- `GET /api/bao-cao/chiphi-sinhvien`: Báo cáo chi phí sinh viên
+- `GET /api/bao-cao/sudung-dichvu`: Báo cáo sử dụng dịch vụ
+- `GET /api/bao-cao/khach-tham`: Báo cáo thống kê khách thăm
+- `GET /api/bao-cao/doanhthu-dichvu`: Báo cáo doanh thu dịch vụ
 
-For detailed information on request parameters and response formats, refer to the source code in the `app/routes/` directory.
+Để biết thông tin chi tiết về các tham số yêu cầu và định dạng phản hồi, tham khảo mã nguồn trong thư mục `app/routes/`.
 
-## 🚀 Installation Guide
+## 🚀 Hướng dẫn cài đặt
 
-### Prerequisites
+### Yêu cầu hệ thống
 
-- Python 3.8 or higher
-- pip and venv (typically included with Python)
-- MySQL Server 8.0+ running
-- Redis Server running
+- Python 3.8 trở lên
+- pip và venv (thường được bao gồm trong Python)
+- MySQL Server 8.0+ đang chạy
+- Redis Server đang chạy
 
-### Setup Steps
+### Các bước cài đặt
 
-1. **Clone the Repository**:
+1. **Sao chép kho lưu trữ**:
    ```bash
    git clone https://github.com/yourusername/dormitory-management-api.git
    cd dormitory-management-api
    ```
 
-2. **Create and Activate Virtual Environment**:
+2. **Tạo và kích hoạt môi trường ảo**:
    ```bash
    python -m venv venv
 
-   # On Linux/macOS/WSL:
+   # Trên Linux/macOS/WSL:
    source venv/bin/activate
 
-   # On Windows (Command Prompt):
+   # Trên Windows (Command Prompt):
    venv\Scripts\activate.bat
 
-   # On Windows (PowerShell):
+   # Trên Windows (PowerShell):
    .\venv\Scripts\Activate.ps1
    ```
 
-3. **Install Dependencies**:
+3. **Cài đặt các phụ thuộc**:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Set Up Database**:
-   - Ensure MySQL Server is running
-   - Create a dedicated user and database (recommended) or use root account (for development only)
-   - Run the SQL script to create tables and insert sample data:
+4. **Thiết lập cơ sở dữ liệu**:
+   - Đảm bảo MySQL Server đang chạy
+   - Tạo người dùng và cơ sở dữ liệu chuyên dụng (được khuyến nghị) hoặc sử dụng tài khoản root (chỉ dành cho phát triển)
+   - Chạy tệp lệnh SQL để tạo bảng và chèn dữ liệu mẫu:
    ```bash
-   # Using root (development only):
+   # Sử dụng root (chỉ phát triển):
    mysql -u root -p < QuanLyKyTucXa_Setup.sql
 
-   # Using dedicated user:
-   mysql -u your_username -p your_database < QuanLyKyTucXa_Setup.sql
+   # Sử dụng người dùng chuyên dụng:
+   mysql -u tên_người_dùng -p cơ_sở_dữ_liệu < QuanLyKyTucXa_Setup.sql
    ```
 
-## ⚙️ Configuration
+## ⚙️ Cấu hình
 
-1. **Create Environment Variables File**:
-   Create a `.env` file in the project root directory with the following content:
+1. **Tạo tệp biến môi trường**:
+   Tạo một tệp `.env` trong thư mục gốc của dự án với nội dung sau:
 
    ```ini
-   # Database Configuration
+   # Cấu hình cơ sở dữ liệu
    MYSQL_HOST=localhost
-   MYSQL_USER=your_mysql_username
-   MYSQL_PASSWORD=your_mysql_password
+   MYSQL_USER=tên_người_dùng_mysql
+   MYSQL_PASSWORD=mật_khẩu_mysql
    MYSQL_DB=QuanLyKyTucXa
 
-   # Redis Configuration
+   # Cấu hình Redis
    REDIS_HOST=localhost
    REDIS_PORT=6379
    REDIS_DB=0
 
-   # Flask Configuration
-   FLASK_SECRET_KEY=your_secure_random_secret_key
-   FLASK_ENV=development  # Change to 'production' for deployment
+   # Cấu hình Flask
+   FLASK_SECRET_KEY=khóa_bí_mật_ngẫu_nhiên_an_toàn
+   FLASK_ENV=development  # Thay đổi thành 'production' cho triển khai
    ```
 
-   **Important**: Replace the placeholder values with your actual configuration.
+   **Quan trọng**: Thay thế các giá trị placeholder bằng cấu hình thực tế của bạn.
 
-## 🏃‍♂️ Running the Application
+## 🏃‍♂️ Chạy ứng dụng
 
-1. **Start Redis Server** (if not already running):
+1. **Khởi động Redis Server** (nếu chưa chạy):
    ```bash
-   # On Linux:
+   # Trên Linux:
    sudo systemctl start redis-server
 
-   # On macOS with Homebrew:
+   # Trên macOS với Homebrew:
    brew services start redis
 
-   # On Windows:
-   # Start Redis via Windows Service or WSL
+   # Trên Windows:
+   # Khởi động Redis qua Windows Service hoặc WSL
    ```
 
-2. **Run the Application**:
+2. **Chạy ứng dụng**:
    ```bash
-   # Development mode:
+   # Chế độ phát triển:
    python run.py
 
-   # Production mode (using Gunicorn):
+   # Chế độ sản xuất (sử dụng Gunicorn):
    gunicorn --workers=4 --bind 0.0.0.0:5000 "app:create_app()"
    ```
 
-   The API will be available at `http://localhost:5000`.
+   API sẽ khả dụng tại `http://localhost:5000`.
 
-## 🧪 Testing
+## 🧪 Kiểm thử
 
-You can test the API using one of the following methods:
+Bạn có thể kiểm thử API bằng một trong các phương pháp sau:
 
-1. **Automated Test Script**:
+1. **Tập lệnh kiểm thử tự động**:
    ```bash
    chmod +x test_api.sh
    ./test_api.sh
    ```
 
-2. **Using API Testing Tools**:
+2. **Sử dụng công cụ kiểm thử API**:
    - [Postman](https://www.postman.com/)
    - [Insomnia](https://insomnia.rest/)
-   - [curl](https://curl.se/) for command-line testing
+   - [curl](https://curl.se/) để kiểm thử qua dòng lệnh
 
-3. **Sample curl Commands**:
+3. **Các lệnh curl mẫu**:
    ```bash
-   # Get all students
+   # Lấy tất cả sinh viên
    curl -X GET http://localhost:5000/api/sinhvien
 
-   # Create a new student
+   # Tạo sinh viên mới
    curl -X POST http://localhost:5000/api/sinhvien \
      -H "Content-Type: application/json" \
      -d '{"maSV": "SV001", "hoTen": "Nguyen Van A", "soCMT": "123456789", "ngaySinh": "2000-01-01", "lop": "K65-CNTT", "queQuan": "Ha Noi"}'
    ```
 
-## 📄 Project Requirements
+## 📄 Yêu cầu dự án
 
-This project was developed as part of Project 2, meeting the following requirements:
+Dự án này được phát triển như một phần của Đồ án 2, đáp ứng các yêu cầu sau:
 
-1. Design and implement a database system for a student dormitory management application
-2. Create sample data and implement complex SQL queries for reporting
-3. Develop a comprehensive API for all CRUD operations and business requirements
-4. Implement business logic validation for room occupancy, vehicle registration limits, etc.
-5. Create specialized APIs for the following reporting needs:
-   - Student expense reports (room and services)
-   - Service usage reports by date range
-   - Visitor tracking statistics
-   - Service revenue reports
-
-For the complete project requirements, please refer to the original project specification document.
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👥 Contributors
-
-- Your Name - Initial work - [YourGitHub](https://github.com/yourusername)
-
-## 🙏 Acknowledgments
-
-- Project supervisor and instructors for their guidance
-- Open-source community for providing the tools and libraries used in this project
+1. Thiết kế và triển khai hệ thống cơ sở dữ liệu cho ứng dụng quản lý ký túc xá sinh viên
+2. Tạo dữ liệu mẫu và triển khai các truy vấn SQL phức tạp cho báo cáo
+3. Phát triển API toàn diện cho tất cả các thao tác CRUD và yêu cầu nghiệp vụ
+4. Triển khai xác thực logic nghiệp vụ cho giới hạn sức chứa phòng, giới hạn đăng ký xe, v.v.
+5. Tạo API chuyên biệt cho các nhu cầu báo cáo sau:
+   - Báo cáo chi phí sinh viên (phòng và dịch vụ)
+   - Báo cáo sử dụng dịch vụ theo khoảng thời gian
+   - Thống kê theo dõi khách thăm
+   - Báo cáo doanh thu dịch vụ
